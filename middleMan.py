@@ -43,19 +43,19 @@ def on_message(client, userdata, msg):
     cameraOn = true
     # If acceleremoter reading exceeds our movement threshold then send the command to turn the camera on
     if msg.topic == "acceleration" and sensorReading > movementThreshold:
-        ret = client.publish ("cameraControl", sensorReading)
+        ret = client.publish ("cameraControl", cameraOn)
         print ("Publish operation finished with ret=%s" % ret)
     # If temperature reading exceeds our movement threshold then send the command to turn the camera on
     if msg.topic == "temperature" and sensorReading > temperatureThreshold:
-        ret = client.publish ("cameraControl", sensorReading)
+        ret = client.publish ("cameraControl", cameraOn)
         print ("Publish operation finished with ret=%s" % ret)
     # If humidity reading exceeds our movement threshold then send the command to turn the camera on
     if msg.topic == "humidity" and sensorReading > humidityThreshold:
-        ret = client.publish ("cameraControl", sensorReading)
+        ret = client.publish ("cameraControl", cameraOn)
         print ("Publish operation finished with ret=%s" % ret)
     # If pressure reading exceeds our movement threshold then send the command to turn the camera on
     if msg.topic == "pressure" and sensorReading > pressureThreshold:
-        ret = client.publish ("cameraControl", sensorReading)
+        ret = client.publish ("cameraControl", cameraOn)
         print ("Publish operation finished with ret=%s" % ret)
             
 # Define clientId, host, user and password
