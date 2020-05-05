@@ -7,9 +7,9 @@ import temp_hum
 host          = "node02.myqtthub.com"
 port          = 1883
 clean_session = True
-client_id     = "AnotherTest"
-user_name     = "AnotherTest"
-password      = "AnotherTest"
+client_id     = "tempHum"
+user_name     = "tempHum"
+password      = "London97"
 
 def on_connect (client, userdata, flags, rc):
     """ Callback called when connection/reconnection is detected """
