@@ -40,7 +40,7 @@ def on_message(client, userdata, msg):
     print("got a message")
     print ("%s => %s" % (msg.topic, str(msg.payload.decode("UTF-8"))))
     sensorReading = msg.payload.decode("UTF-8")
-    cameraOn = 1
+    cameraOn = "1"
     # If acceleremoter reading exceeds our movement threshold then send the command to turn the camera on
     if msg.topic == "acceleration" and sensorReading > movementThreshold:
         ret = client.publish ("cameraControl", cameraOn)
