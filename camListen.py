@@ -38,9 +38,9 @@ def on_message(client, userdata, msg):
     print("got a message")
     print ("%s => %s" % (msg.topic, str(msg.payload.decode("UTF-8"))))
     if str(msg.payload.decode("UTF-8")) == "1":
-        print("Starting webcam for 10 seconds")
+        print("Starting webcam for 45 seconds")
         subprocess.Popen('sudo /opt/webcam_streamer/start', shell=True)
-        time.sleep(10)
+        time.sleep(45)
         subprocess.Popen('pkill start', shell=True)
         #subprocess.Popen('pkill start')
         subprocess.Popen('pkill hawkeye', shell=True)
