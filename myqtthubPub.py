@@ -57,9 +57,9 @@ while not client.connected_flag:           #wait in loop
 temp = temp_hum.temperature()
 hum = temp_hum.humidity()
 pressure = temp_hum.pressure()
-client.publish("temperatureSensor",temp)
-client.publish("humiditySensor",hum)
-client.publish("pressureSensor",pressure)
+client.publish("temperature",temp)
+client.publish("humidity",hum)
+client.publish("pressure",pressure)
 print ("The room temperature is:  temp=%s" % temp + "the humidity is: hum=%s" % hum + "and the pressure is: pressure=%s" % pressure)
 
 # close connection
