@@ -3,6 +3,7 @@
 import paho.mqtt.client as mqtt
 import time
 import ssl
+import time
 
 host          = "node02.myqtthub.com"
 port          = 1883
@@ -11,10 +12,10 @@ client_id     = "middleMan"
 user_name     = "middleMan"
 password      = "Glasgow22"
 
-movementThreshold = input("Please enter the movement threshold: ")
-temperatureThreshold = input("Please enter the temperature threshold: ")
-humidityThreshold = input("Please enter the humidity threshold: ")
-pressureThreshold = input("Please enter the pressure threshold: ")
+#Setting maximum thresholds of these values from the sensor
+temperatureThreshold = int(input("Please enter the temperature maximum threshold: "))
+humidityThreshold = int(input("Please enter the humidity maximum threshold: "))
+pressureThreshold = int(input("Please enter the pressure maximum threshold: "))
 
 def on_connect (client, userdata, flags, rc):
     """ Callback called when connection/reconnection is detected """
@@ -40,24 +41,32 @@ def on_message(client, userdata, msg):
     print("got a message")
     print ("%s => %s" % (msg.topic, str(msg.payload.decode("UTF-8"))))
     sensorReading = msg.payload.decode("UTF-8")
+    #print(type(sensorReading))
+    
+    intReading = int(sensorReading)
+    
+    #intReading = int(msg.payload.decode("UTF-8"))
     cameraOn = "1"
     # If acceleremoter reading exceeds our movement threshold then send the command to turn the camera on
-    if msg.topic == "acceleration" and sensorReading > movementThreshold:
+    if msg.topic == "acceleration" and sensorReading == "Warning Concerning movement!!":
         ret = client.publish ("cameraControl", cameraOn)
-        print ("Publish operation finished with ret=%s" % ret)
-    # If temperature reading exceeds our movement threshold then send the command to turn the camera on
+        print ("Publish operation to camera because of acceleration finished with ret=%s" % ret)
+        
+    # If temperature reading exceeds our temperature threshold then send the command to turn the camera on
     if msg.topic == "temperature" and sensorReading > temperatureThreshold:
         ret = client.publish ("cameraControl", cameraOn)
-        print ("Publish operation finished with ret=%s" % ret)
-    # If humidity reading exceeds our movement threshold then send the command to turn the camera on
+        print ("Publish operation to camera because of temperature finished with ret=%s" % ret)
+
+    # If humidity reading exceeds our humidity threshold then send the command to turn the camera on
     if msg.topic == "humidity" and sensorReading > humidityThreshold:
         ret = client.publish ("cameraControl", cameraOn)
-        print ("Publish operation finished with ret=%s" % ret)
-    # If pressure reading exceeds our movement threshold then send the command to turn the camera on
+        print ("Publish operation to camera because of humidity finished with ret=%s" % ret)
+
+    # If pressure reading exceeds our pressure threshold then send the command to turn the camera on
     if msg.topic == "pressure" and sensorReading > pressureThreshold:
         ret = client.publish ("cameraControl", cameraOn)
-        print ("Publish operation finished with ret=%s" % ret)
-            
+        print ("Publish operation to camera because of pressure finished with ret=%s" % ret)
+                    
 # Define clientId, host, user and password
 client = mqtt.Client (client_id = client_id, clean_session = clean_session)
 client.username_pw_set (user_name, password)
@@ -79,7 +88,12 @@ while not client.connected_flag:           #wait in loop
     client.loop()
     time.sleep (1)
 
-client.subscribe(["temperature","humidity","pressure","acceleration"])
+#client.subscribe(["temperature","humidity","pressure","acceleration"], [0,4], function(qosList))
+client.subscribe("temperature")
+client.subscribe("acceleration")
+client.subscribe("humidity")
+client.subscribe("pressure")
+
 
 try:
     while True:
