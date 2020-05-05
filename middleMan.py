@@ -1,4 +1,4 @@
-#!/usr/bin/python
+##!/usr/bin/python
 
 import paho.mqtt.client as mqtt
 import time
@@ -41,17 +41,13 @@ def on_message(client, userdata, msg):
     print("got a message")
     print ("%s => %s" % (msg.topic, str(msg.payload.decode("UTF-8"))))
     sensorReading = msg.payload.decode("UTF-8")
-    #print(type(sensorReading))
-    
-    intReading = int(sensorReading)
-    
-    #intReading = int(msg.payload.decode("UTF-8"))
+        
     cameraOn = "1"
     # If acceleremoter reading exceeds our movement threshold then send the command to turn the camera on
     if msg.topic == "acceleration" and sensorReading == "Warning Concerning movement!!":
         ret = client.publish ("cameraControl", cameraOn)
         print ("Publish operation to camera because of acceleration finished with ret=%s" % ret)
-        
+           
     # If temperature reading exceeds our temperature threshold then send the command to turn the camera on
     if msg.topic == "temperature" and sensorReading > temperatureThreshold:
         ret = client.publish ("cameraControl", cameraOn)
@@ -66,18 +62,13 @@ def on_message(client, userdata, msg):
     if msg.topic == "pressure" and sensorReading > pressureThreshold:
         ret = client.publish ("cameraControl", cameraOn)
         print ("Publish operation to camera because of pressure finished with ret=%s" % ret)
-                    
+        
 # Define clientId, host, user and password
 client = mqtt.Client (client_id = client_id, clean_session = clean_session)
 client.username_pw_set (user_name, password)
 
 client.on_connect = on_connect
 client.on_message = on_message
-
-# configure TLS connection
-# client.tls_set (cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2)
-# client.tls_insecure_set (False)
-# port = 8883
 
 # connect using standard unsecure MQTT with keepalive to 60
 client.connect (host, port, keepalive = 60)
@@ -88,7 +79,6 @@ while not client.connected_flag:           #wait in loop
     client.loop()
     time.sleep (1)
 
-#client.subscribe(["temperature","humidity","pressure","acceleration"], [0,4], function(qosList))
 client.subscribe("temperature")
 client.subscribe("acceleration")
 client.subscribe("humidity")
